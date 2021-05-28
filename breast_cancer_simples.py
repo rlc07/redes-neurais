@@ -4,6 +4,7 @@ import keras
 from keras.models import Sequential #classe responsavel por criar a rede neural com varias camadas ocultas
 from keras.layers import Dense #classe responsavel por adicionar camadas densas a rede neural (cada um dos neuronios é ligado com todos os neuronios da camada subsequente)
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, accuracy_score
 
 previsores = pd.read_csv('entradas-breast.csv')
 classe = pd.read_csv('saidas-breast.csv') # classsificação binaria 1 = tem tumor, 0 não tem
@@ -52,4 +53,27 @@ classificador.add(Dense(units = 1, activation = 'sigmoid'))
 # metrics = metricas para fazer avaliação
 #  - binary_accucary = pega quantidade de registros que deram sucesso e erros e faz calculo da diferença
 
-classificador.compile(optimizer = 'adam', loss='binary_crossentropy', metrics= ['binary_accucary'])
+classificador.compile(optimizer = 'adam', loss='binary_crossentropy', metrics= ['binary_accuracy'])
+
+#executa o treinamento com a base de dados de treinamento
+# batch_size = atualiza os pesos a cada 10 registros
+# epochs = quantas vezes é executada os ajustes dos pesos
+classificador.fit(previsores_treinamento, classe_treinamento, batch_size = 10, epochs = 100)
+
+#usa a sigmoid que retorna a probabilidade de ser 0 ou 1
+
+previsoes = classificador.predict(previsores_teste)
+
+previsoes = (previsoes > 0.5)
+
+#caucula a porcentagem de acerto do algoritomo em cima da base de teste retornando 89% de acertos sobre a base de teste
+precisao = accuracy_score(classe_teste, previsoes)
+print(precisao)
+
+#faz uma avaliação de quais classe o algoritimo esta certando e errando
+#exemplo 0 = 100 1 = 30 erros etc..
+matriz = confusion_matrix(classe_teste, previsoes)
+print(matriz)
+#ultiliza o keras msm responsabilidade acima
+resultado = classificador.evaluate(previsores_teste, classe_teste)
+
