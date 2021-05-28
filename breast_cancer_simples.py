@@ -43,6 +43,8 @@ classificador.add(Dense(units = 16, activation= 'relu',
 #activation = como estamos trabalhando com classificador binario 0 ou 1 a função deve ser sigmoid
 classificador.add(Dense(units = 1, activation = 'sigmoid'))
 
+# rede criada = https://github.com/rlc07/redes-neurais/blob/master/images/img.png
+
 #compila rede neural
 
 # optimizer = função usada para fazer os ajustes do peso se os resultados não for bom podemos testar com outros
