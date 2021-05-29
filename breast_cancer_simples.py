@@ -32,19 +32,23 @@ classificador = Sequential()
 
 #kernel_initializer = como sera feita a inicialização dos pesos padrão random_uniform
 
-#input_dim = adiciona quantos elementos na camada de entrada (30 colunas csv)
+#input_dim = adiciona quantos elementos na camada de entrada (30 colunas csv) - somente na primeira camada oculta
 
 classificador.add(Dense(units = 16, activation= 'relu',
                         kernel_initializer= 'random_uniform', input_dim = 30))
-
+classificador.add(Dense(units = 16, activation= 'relu',
+                        kernel_initializer= 'random_uniform'))
 #adiciona camada de saida
 
 #units = 1 como a resposta é (maligno ou benigno) se retornar valor proximo a 1 seignifica que o cancer é maligno caso contrario proximo a 0 benigno
 
 #activation = como estamos trabalhando com classificador binario 0 ou 1 a função deve ser sigmoid
+#usa a sigmoid que retorna a probabilidade de ser 0 ou 1
+
 classificador.add(Dense(units = 1, activation = 'sigmoid'))
 
-# rede criada = https://github.com/rlc07/redes-neurais/blob/master/images/img.png
+# rede criada 1 camada = https://github.com/rlc07/redes-neurais/blob/master/images/img.png
+# rede criada 2 camada = https://github.com/rlc07/redes-neurais/blob/master/images/img_1.png
 
 #compila rede neural
 
@@ -53,14 +57,20 @@ classificador.add(Dense(units = 1, activation = 'sigmoid'))
 # metrics = metricas para fazer avaliação
 #  - binary_accucary = pega quantidade de registros que deram sucesso e erros e faz calculo da diferença
 
-classificador.compile(optimizer = 'adam', loss='binary_crossentropy', metrics= ['binary_accuracy'])
+#classificador.compile(optimizer = 'adam', loss='binary_crossentropy', metrics= ['binary_accuracy'])
+
+otimizador = keras.optimizers.Adam(lr = 0.001, decay = 0.0001, clipvalue = 0.5)
+classificador.compile(otimizador, loss = 'binary_crossentropy', metrics = ['binary_accuracy'])
 
 #executa o treinamento com a base de dados de treinamento
 # batch_size = atualiza os pesos a cada 10 registros
 # epochs = quantas vezes é executada os ajustes dos pesos
 classificador.fit(previsores_treinamento, classe_treinamento, batch_size = 10, epochs = 100)
 
-#usa a sigmoid que retorna a probabilidade de ser 0 ou 1
+# mostra todos os pesos encontrato no treinamento
+peso0 = classificador.layers[0].get_weights()
+peso1 = classificador.layers[1].get_weights()
+peso2 = classificador.layers[2].get_weights()
 
 previsoes = classificador.predict(previsores_teste)
 
