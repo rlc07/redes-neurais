@@ -59,8 +59,8 @@ classificador.add(Dense(units = 1, activation = 'sigmoid'))
 
 #classificador.compile(optimizer = 'adam', loss='binary_crossentropy', metrics= ['binary_accuracy'])
 
-otimizador = keras.optimizers.Adam(lr = 0.001, decay = 0.0001, clipvalue = 0.5)
-classificador.compile(otimizador, loss = 'binary_crossentropy', metrics = ['binary_accuracy'])
+
+
 
 #executa o treinamento com a base de dados de treinamento
 # batch_size = atualiza os pesos a cada 10 registros
